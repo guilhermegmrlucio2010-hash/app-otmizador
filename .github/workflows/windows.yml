@@ -71,4 +71,5 @@ jobs:
             .local/native-ui.png
             .local/webdriver.log
             .local/native-driver.log
+            .local/ci-desktop.png
           if-no-files-found: ignore

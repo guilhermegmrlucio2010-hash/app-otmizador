@@ -19,3 +19,4 @@ if(result.passed!==true)throw new Error('Relatório nativo inválido');
 if(mode==='--self-test'&&(result.read_only!==true||!(result.ram_total>0)))throw new Error('Relatório de leitura inválido');
 if(mode==='--isolated-fixture-test'&&result.user_windows_modified!==false)throw new Error('Fixture não isolada');
 console.log(`Self-test nativo passou (${mode}). Relatório: ${report}`);
+console.log(JSON.stringify(result));

@@ -1,0 +1,3 @@
+import {describe,it,expect} from 'vitest';
+import {cleaningOutcome,type CleaningReport} from './cleaner';
+describe('resultados da limpeza verificados',()=>{it('não conta pedidos de eliminação sem confirmação final',()=>{const report:CleaningReport={files:[{deleted:true,verified:true},{deleted:true,verified:false},{deleted:false,verified:false}],verified_deleted_bytes:123,volume_free_before:1000,volume_free_after:900,volume_free_delta:-100,measurement_note:'Atividade concorrente',reversible:false};expect(cleaningOutcome(report)).toEqual({removed:1,failed:2,bytes:123,partial:true});expect(report.volume_free_delta).toBe(-100);});});

@@ -1,0 +1,76 @@
+name: Windows validation and installer
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
+jobs:
+  validate:
+    runs-on: windows-latest
+    timeout-minutes: 50
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.18.0'
+          cache: npm
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - run: npm run test:db
+      - run: npm run test:windows-syntax
+      - run: npm run build
+      - run: cargo test --manifest-path src-tauri/Cargo.toml --release --features tauri/custom-protocol
+      - run: npm run installer
+      - name: Native read-only smoke test
+        run: node scripts/smoke-native.mjs src-tauri/target/release/lucioz-optimizer.exe native-smoke.json
+      - name: Disposable Windows service and task fixture tests
+        run: node scripts/smoke-native.mjs src-tauri/target/release/lucioz-optimizer.exe isolated-fixtures.json --isolated-fixture-test
+      - name: Disposable installation and uninstall test
+        run: powershell.exe -NoProfile -File scripts/test-installation.ps1
+      - name: Set up matching signed Edge WebDriver
+        run: powershell.exe -NoProfile -File scripts/setup-webdriver.ps1
+      - name: Read-only WebView2 user-flow tests
+        run: powershell.exe -NoProfile -File scripts/test-ui-medium.ps1
+      - name: Installer checksum
+        shell: pwsh
+        run: |
+          $installer = Get-ChildItem -LiteralPath src-tauri/target/release/bundle/nsis -Filter '*-setup.exe' | Select-Object -First 1
+          if (-not $installer) { throw 'Installer not found' }
+          $hash = Get-FileHash -LiteralPath $installer.FullName -Algorithm SHA256
+          "$($hash.Hash.ToLowerInvariant())  $($installer.Name)" | Set-Content -Encoding utf8 SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lucioz-windows-installer-unsigned
+          path: |
+            src-tauri/target/release/bundle/nsis/*-setup.exe
+            src-tauri/target/release/lucioz-optimizer.exe
+            native-smoke.json
+            isolated-fixtures.json
+            installed-smoke.json
+            ui-native-report.json
+            preferences-smoke.json
+            SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 14
+      - name: UI diagnostic logs and screenshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lucioz-ui-diagnostics
+          path: |
+            .local/native-ui.png
+            .local/webdriver.log
+            .local/native-driver.log
+            .local/ci-desktop.png
+          if-no-files-found: ignore

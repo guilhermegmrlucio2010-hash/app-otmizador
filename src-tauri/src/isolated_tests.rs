@@ -4,6 +4,7 @@ pub fn preferences(report:&Path)->Result<(),String>{
  let mut data=crate::optimization_engine::isolated_roundtrip()?;
  data["power"]=crate::power_manager::isolated_roundtrip()?;
  data["startup"]=crate::startup_manager::isolated_roundtrip()?;
+ data["process"]=crate::process_manager::isolated_roundtrip()?;
  let mut output=OpenOptions::new().write(true).create_new(true).open(report).map_err(|e|e.to_string())?;
  output.write_all(serde_json::to_string_pretty(&data).map_err(|e|e.to_string())?.as_bytes()).map_err(|e|e.to_string())
 }

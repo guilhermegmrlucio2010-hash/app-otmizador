@@ -20,6 +20,7 @@ describe('catálogo e fontes reais', () => {
             expect(c.action).toBeUndefined();
     } });
     it('limita as alterações às seis APIs de preferências visuais', () => { expect(catalog.filter(x => x.action).map(x => x.id)).toEqual(['visual.combobox_animation', 'visual.listbox_scrolling', 'visual.selection_fade', 'visual.client_animation', 'visual.menu_animation', 'visual.tooltip_animation']); });
+    it('não oferece ações para proteções, afinidades ou tweaks experimentais',()=>{for(const id of ['security.defender','security.smartscreen','security.mitigations','security.vbs','security.browser_updates','interrupts.msi','interrupts.affinity','graphics.latency','memory.standby','network.tweaks','nvidia.profiles']){const check=catalog.find(c=>c.id===id);expect(check?.kind).toBe('UNSUPPORTED');expect(check?.action).toBeUndefined();}});
     it('preserva zero, false e ausência de fonte', () => { expect(valuesAt([{ nested: [{ value: 0 }, { value: false }] }], 'nested.value')).toEqual([0, false]); expect(evidence(catalog[0], {}, null).available).toBe(false); expect(valuesAt({ value: null }, 'value')).toEqual([]); });
     it('não devolve métricas fictícias no navegador', async () => { await expect(call('snapshot')).rejects.toThrow('aplicação Windows'); });
     it('formata unidades binárias', () => { expect(bytes(1024 ** 3)).toBe('1.0 GB'); expect(bytes(0)).toBe('0 B'); });

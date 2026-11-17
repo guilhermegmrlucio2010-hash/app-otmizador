@@ -5,7 +5,7 @@ const args=process.argv.slice(2);
 const executable=path.resolve(args[0]??'src-tauri/target/release/lucioz-optimizer.exe');
 const report=path.resolve(args[1]??'.local/native-smoke.json');
 const mode=args[2]??'--self-test';
-if(!['--self-test','--isolated-fixture-test'].includes(mode))throw new Error('Modo de teste não suportado');
+if(!['--self-test','--isolated-fixture-test','--isolated-preferences-test'].includes(mode))throw new Error('Modo de teste não suportado');
 if(!existsSync(executable))throw new Error(`Executável não encontrado: ${executable}`);
 if(existsSync(report))throw new Error(`O relatório já existe; indique um nome novo: ${report}`);
 mkdirSync(path.dirname(report),{recursive:true});

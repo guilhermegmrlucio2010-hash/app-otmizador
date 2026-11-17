@@ -13,6 +13,7 @@ OS=$os.Caption;Version=$os.Version;Build=$os.BuildNumber;Architecture=$os.OSArch
 CPU=$cpu.Name;Cores=$cpu.NumberOfCores;Threads=$cpu.NumberOfLogicalProcessors;MaxClockMHz=$cpu.MaxClockSpeed;CurrentClockMHz=$cpu.CurrentClockSpeed;CPUStatus=$cpu.Status;Socket=$cpu.SocketDesignation;VirtualizationFirmware=$cpu.VirtualizationFirmwareEnabled;L2KB=$cpu.L2CacheSize;L3KB=$cpu.L3CacheSize
 Manufacturer=$cs.Manufacturer;Model=$cs.Model;PhysicalMemory=$cs.TotalPhysicalMemory;AutoPagefile=$cs.AutomaticManagedPagefile;GPU=$gpu;Pagefile=$page;Disks=$disks;Volumes=$volumes;MemoryModules=$memory;DeviceErrors=$devices
 Transparency=ReadValue 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize' 'EnableTransparency'
+TransparencyEffective=$(try{[Windows.UI.ViewManagement.UISettings,Windows.UI.ViewManagement,ContentType=WindowsRuntime]::new().AdvancedEffectsEnabled}catch{$null})
 Animations=ReadValue 'HKCU:\Control Panel\Desktop\WindowMetrics' 'MinAnimate'
 GameMode=ReadValue 'HKCU:\Software\Microsoft\GameBar' 'AutoGameModeEnabled'
 GameDVR=ReadValue 'HKCU:\Software\Microsoft\Windows\CurrentVersion\GameDVR' 'AppCaptureEnabled'

@@ -1,4 +1,5 @@
 import type { Check, Row, Snapshot } from './types';
+import {policyCatalog} from './policyCatalog';
 type Spec = [
     string,
     string,
@@ -111,16 +112,23 @@ const specs: Spec[] = [
     ['visual.theme', 'Efeitos visuais', 'Tema das aplicações', 'hardware', 'DarkApps'],
     ['visual.taskbar', 'Efeitos visuais', 'Animações da barra de tarefas', 'hardware', 'TaskbarAnimations'],
     ['visual.windows', 'Efeitos visuais', 'Animações de janelas', 'hardware', 'Animations'],
+    ['visual.transparency', 'Efeitos visuais', 'Transparência efetiva (WinRT, quando disponível)', 'hardware', 'TransparencyEffective'],
+    ['gaming.mode_preference', 'Jogos', 'Preferência de Game Mode registada (não prova de atividade)', 'hardware', 'GameMode'],
+    ['gaming.capture_preference', 'Jogos', 'Autorização de captura registada (não prova de gravação)', 'hardware', 'GameDVR'],
     ['gaming.libraries', 'Jogos', 'Jogos instalados nas bibliotecas', 'games', 'Name'],
     ['gaming.launchers', 'Jogos', 'Launchers das bibliotecas detetadas', 'games', 'Launcher']
 ];
 export const catalog: Check[] = specs.map(([id, category, name, source, field]) => ({ id, category, name, source, field, description: `Inspeção local: ${name.toLocaleLowerCase('pt-PT')}. Fonte: ${source === 'hardware' ? 'Windows CIM/WMI' : source === 'live' ? 'contadores do sistema via sysinfo' : source === 'tasks' ? 'API COM do Agendador de Tarefas' : 'inventário local do Windows'}.`, kind: 'DIAGNOSTIC', risk: 'Baixo', recommendation: 'Rever os dados no contexto da utilização; manter a configuração suportada pelo fabricante.', benefit: 'Evidência para diagnóstico; esta leitura não altera o desempenho.', confidence: 'Alta para o valor comunicado; não demonstra causalidade.', admin: false, restart: false, dependencies: [] }));
 const actions: Check[] = [
+    { id: 'visual.combobox_animation', name: 'Desativar animação das caixas de seleção', category: 'Efeitos visuais', field: 'ComboboxAnimation', description: 'SystemParametersInfoW: SPI_SETCOMBOBOXANIMATION. Altera o efeito de abertura das caixas de seleção clássicas; aplicações modernas podem não respeitar esta preferência.', recommendation: 'Preferência de movimento, sem promessa de desempenho.', benefit: 'Remove a transição dos controlos clássicos compatíveis.' },
+    { id: 'visual.listbox_scrolling', name: 'Desativar deslocamento suave das listas', category: 'Efeitos visuais', field: 'ListboxScrolling', description: 'SystemParametersInfoW: SPI_SETLISTBOXSMOOTHSCROLLING. Altera a preferência de deslocamento dos controlos ListBox clássicos, sem interferir com o rato ou jogos.', recommendation: 'Selecionar apenas se preferir deslocamento sem animação.', benefit: 'Menos movimento nas listas que respeitem a preferência.' },
+    { id: 'visual.selection_fade', name: 'Desativar desvanecimento da seleção', category: 'Efeitos visuais', field: 'SelectionFade', description: 'SystemParametersInfoW: SPI_SETSELECTIONFADE. Desativa o efeito de desaparecimento da seleção em menus compatíveis; o resultado visual depende do tema e das aplicações.', recommendation: 'Preferência de interface; não é uma alteração de latência gráfica.', benefit: 'Remove um efeito visual de menus clássicos compatíveis.' },
     { id: 'visual.client_animation', name: 'Reduzir animações da área de cliente', category: 'Efeitos visuais', field: 'ClientAnimation', description: 'API SystemParametersInfoW: SPI_SETCLIENTAREAANIMATION. Desativa animações transitórias em aplicações que respeitem esta preferência de acessibilidade.', recommendation: 'Selecionar apenas se preferir menos movimento.', benefit: 'Menos movimento visual; sem aumento de FPS garantido.' },
     { id: 'visual.menu_animation', name: 'Desativar animação dos menus', category: 'Efeitos visuais', field: 'MenuAnimation', description: 'API SystemParametersInfoW: SPI_SETMENUANIMATION. Altera a preferência documentada de animação dos menus.', recommendation: 'Selecionar se preferir menus sem transições.', benefit: 'Remove a transição dos menus nas aplicações compatíveis.' },
     { id: 'visual.tooltip_animation', name: 'Desativar animação das sugestões', category: 'Efeitos visuais', field: 'TooltipAnimation', description: 'API SystemParametersInfoW: SPI_SETTOOLTIPANIMATION. Altera a preferência documentada de animação dos tooltips.', recommendation: 'Selecionar se preferir sugestões sem animação.', benefit: 'Reduz movimento decorativo; não é uma otimização de jogos.' }
 ].map(x => ({ ...x, source: 'preferences', kind: 'SAFE CHANGE', risk: 'Baixo', confidence: 'Alta para a preferência; sem evidência de ganhos de FPS.', admin: false, restart: false, dependencies: ['Windows 11; sessão interativa; aplicação deve respeitar a preferência'], action: x.id } as Check));
 catalog.push(...actions);
+catalog.push(...policyCatalog);
 export function valuesAt(data: unknown, path: string): unknown[] { if (!path)
     return data === undefined ? [] : [data]; const parts = path.split('.'); function walk(node: unknown, index: number): unknown[] { if (node === null || node === undefined)
     return []; if (index === parts.length)

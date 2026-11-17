@@ -19,7 +19,7 @@ describe('catálogo e fontes reais', () => {
         if (c.kind === 'DIAGNOSTIC')
             expect(c.action).toBeUndefined();
     } });
-    it('limita as alterações às três APIs de preferências visuais', () => { expect(catalog.filter(x => x.action).map(x => x.id)).toEqual(['visual.client_animation', 'visual.menu_animation', 'visual.tooltip_animation']); });
+    it('limita as alterações às seis APIs de preferências visuais', () => { expect(catalog.filter(x => x.action).map(x => x.id)).toEqual(['visual.combobox_animation', 'visual.listbox_scrolling', 'visual.selection_fade', 'visual.client_animation', 'visual.menu_animation', 'visual.tooltip_animation']); });
     it('preserva zero, false e ausência de fonte', () => { expect(valuesAt([{ nested: [{ value: 0 }, { value: false }] }], 'nested.value')).toEqual([0, false]); expect(evidence(catalog[0], {}, null).available).toBe(false); expect(valuesAt({ value: null }, 'value')).toEqual([]); });
     it('não devolve métricas fictícias no navegador', async () => { await expect(call('snapshot')).rejects.toThrow('aplicação Windows'); });
     it('formata unidades binárias', () => { expect(bytes(1024 ** 3)).toBe('1.0 GB'); expect(bytes(0)).toBe('0 B'); });

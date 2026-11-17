@@ -39,3 +39,17 @@ pub fn restore(db:&Database,id:i64)->Result<Value,String>{
  db.0.lock().map_err(|e|e.to_string())?.execute("UPDATE changes SET status='restored',error=NULL WHERE id=?1",[id]).map_err(|e|e.to_string())?;db.log("startup.restore",&id.to_string())?;Ok(json!({"status":"restored","verified":true}))
 }
 #[cfg(test)]mod tests{use super::*;#[test]fn protects_system_and_scripts(){assert!(!optional("C:\\Windows\\System32\\cmd.exe /c anything"));assert!(!optional("powershell.exe"));assert!(!optional("C:\\Windows\\System32\\SecurityHealthSystray.exe"));assert!(!optional("C:\\Program Files\\Steam\\steam.exe"));assert!(optional("\"C:\\Program Files (x86)\\Steam\\steam.exe\" -silent"));}}
+
+pub fn isolated_roundtrip()->Result<Value,String>{
+ if std::env::var("GITHUB_ACTIONS").as_deref()!=Ok("true")||std::env::var("RUNNER_OS").as_deref()!=Ok("Windows"){return Err("Ensaio exclusivo do runner descartável".into())}
+ let name=format!("LuciozDisposableFixture{}",std::process::id());let(key,_)=RegKey::predef(HKEY_CURRENT_USER).create_subkey(RUN).map_err(|e|e.to_string())?;
+ match key.get_raw_value(&name){Err(e)if e.kind()==std::io::ErrorKind::NotFound=>{},_=>return Err("Não foi possível provar a ausência do valor de fixture".into())}
+ struct Guard(String);impl Drop for Guard{fn drop(&mut self){if let Ok(k)=RegKey::predef(HKEY_CURRENT_USER).open_subkey_with_flags(RUN,KEY_SET_VALUE){let _=k.delete_value(&self.0);}}}
+ let _guard=Guard(name.clone());let command="\"C:\\LuciozNonexistentFixture\\steam.exe\" -silent";
+ let bytes:Vec<u8>=command.encode_utf16().chain(Some(0)).flat_map(u16::to_le_bytes).collect();let value=RegValue{bytes,vtype:REG_SZ};key.set_raw_value(&name,&value).map_err(|e|e.to_string())?;
+ let db=Database::open(std::path::Path::new(":memory:"))?;let change=disable(&db,&name,command)?;
+ if !matches!(key.get_raw_value(&name),Err(e)if e.kind()==std::io::ErrorKind::NotFound){return Err("A entrada de fixture ainda existe".into())}
+ restore(&db,change["id"].as_i64().ok_or("ID de arranque ausente")?)?;let current=key.get_raw_value(&name).map_err(|e|e.to_string())?;if current.bytes!=value.bytes||current.vtype!=value.vtype{return Err("O restauro não preservou bytes/tipo".into())}
+ key.delete_value(&name).map_err(|e|e.to_string())?;
+ Ok(json!({"status":"passed","method":"HKCU Run fixture disable/restore; exact raw bytes and type; fixture removed","executed":false}))
+}

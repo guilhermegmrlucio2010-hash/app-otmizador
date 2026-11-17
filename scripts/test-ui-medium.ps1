@@ -14,3 +14,5 @@ icacls $workspace /grant ('*'+$sid+':(OI)(CI)M')
 if($LASTEXITCODE -ne 0){throw 'Não foi possível conceder acesso ao próprio utilizador do runner'}
 & $tool --integrity Medium --wait node scripts/test-ui-native.mjs
 if($LASTEXITCODE -ne 0){throw 'O teste WebView2 em privilégios normais falhou'}
+& $tool --integrity Medium --wait node scripts/smoke-native.mjs src-tauri/target/release/lucioz-optimizer.exe preferences-smoke.json --isolated-preferences-test
+if($LASTEXITCODE -ne 0){throw 'O ensaio de alterações/restauro sem administrador falhou'}

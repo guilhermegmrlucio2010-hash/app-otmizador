@@ -59,6 +59,7 @@ jobs:
             isolated-fixtures.json
             installed-smoke.json
             ui-native-report.json
+            preferences-smoke.json
             SHA256SUMS.txt
           if-no-files-found: error
           retention-days: 14

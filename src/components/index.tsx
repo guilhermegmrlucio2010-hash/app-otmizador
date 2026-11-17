@@ -58,11 +58,12 @@ export function DataTable({ rows, columns, onRow, action, filter = '' }: {
     return <Empty />; return <><div className="table-wrap"><table><thead><tr>{cols.map(c => <th key={c}><button onClick={() => setSort({ key: c, asc: sort?.key === c ? !sort.asc : true })}>{c} {sort?.key === c ? (sort.asc ? '↑' : '↓') : ''}</button></th>)}{onRow && <th>Operação</th>}</tr></thead><tbody>{filtered.slice(0, limit).map((r, i) => <tr key={i}>{cols.map(c => <td title={cell(r[c])} key={c}>{cell(r[c])}</td>)}{onRow && <td><Button variant="ghost" onClick={() => onRow(r)}>{action ?? 'Inspecionar'}<ChevronRight size={13}/></Button></td>}</tr>)}</tbody></table></div><div className="table-footer">{Math.min(limit, filtered.length)} de {filtered.length} registos{limit < filtered.length && <Button variant="ghost" onClick={() => setLimit(x => x + 100)}>Mostrar mais</Button>}</div></>; }
 export const ServiceTable = DataTable;
 export const ProcessTable = DataTable;
-export function OptimizationToggle({ checked, onChange, label }: {
+export function OptimizationToggle({ checked, onChange, label, disabled=false }: {
     checked: boolean;
     onChange: (value: boolean) => void;
     label: string;
-}) { return <label className="check-label"><input type="checkbox" checked={checked} onChange={e => onChange(e.target.checked)}/>{label}</label>; }
+    disabled?: boolean;
+}) { return <label className="check-label"><input type="checkbox" checked={checked} disabled={disabled} onChange={e => onChange(e.target.checked)}/>{label}</label>; }
 export function OptimizationCard({ check, state, onReview, selected, onSelect }: {
     check: CheckType;
     state: {
@@ -72,7 +73,7 @@ export function OptimizationCard({ check, state, onReview, selected, onSelect }:
     onReview: () => void;
     selected: boolean;
     onSelect: () => void;
-}) { return <article className="card optimization"><div className="optimization-top"><span className="category">{check.category}</span><span className={`badge ${check.kind === 'SAFE CHANGE' ? 'blue' : ''}`}>{check.kind === 'DIAGNOSTIC' ? 'DIAGNÓSTICO' : check.kind === 'SAFE CHANGE' ? 'ALTERAÇÃO REVERSÍVEL' : check.kind === 'MANUAL REVIEW' ? 'REVISÃO MANUAL' : 'NÃO SUPORTADO'}</span></div><h3>{check.name}</h3><p>{check.description}</p><div className="detected"><span className={`dot ${state.available ? 'online' : ''}`}/><span>{state.available ? 'Detetado' : 'Não disponível'}</span><code title={state.text}>{state.text}</code></div><div className="optimization-bottom"><RiskIndicator risk={check.risk}/>{check.action && <OptimizationToggle label="Selecionar" checked={selected} onChange={onSelect}/>}<Button variant="ghost" onClick={onReview}>Detalhes <ChevronRight size={13}/></Button></div></article>; }
+}) { return <article className="card optimization"><div className="optimization-top"><span className="category">{check.category}</span><span className={`badge ${check.kind === 'SAFE CHANGE' ? 'blue' : ''}`}>{check.kind === 'DIAGNOSTIC' ? 'DIAGNÓSTICO' : check.kind === 'SAFE CHANGE' ? 'ALTERAÇÃO REVERSÍVEL' : check.kind === 'MANUAL REVIEW' ? 'REVISÃO MANUAL' : 'NÃO SUPORTADO'}</span></div><h3>{check.name}</h3><p>{check.description}</p><div className="detected"><span className={`dot ${state.available ? 'online' : ''}`}/><span>{state.available ? 'Detetado' : 'Não disponível'}</span><code title={state.text}>{state.text}</code></div><div className="optimization-bottom"><RiskIndicator risk={check.risk}/>{check.action && <OptimizationToggle label="Selecionar proposta" checked={selected} disabled={!state.available} onChange={onSelect}/>}<Button variant="ghost" onClick={onReview}>Detalhes <ChevronRight size={13}/></Button></div></article>; }
 export function Toolbar({ search, onSearch, children }: {
     search: string;
     onSearch: (s: string) => void;

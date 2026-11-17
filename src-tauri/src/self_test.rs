@@ -1,5 +1,7 @@
 use serde_json::{json,Value};
 use std::{fs::OpenOptions,io::Write,path::Path};
+pub fn read_only_command(command:&str)->bool{matches!(command,"snapshot"|"processes"|"inventory"|"service_details"|"review_service"|"preview_profile"|"preview_game_session"|"preview_game_settings"|"power_plans"|"recycle_info"|"large_files"|"ui_preferences"|"history"|"load_settings"|"get_session"|"preview_changes")}
+#[cfg(test)]mod tests{use super::*;#[test]fn native_read_only_test_mode_denies_all_mutations(){for command in ["apply_change","apply_profile_action","apply_game_settings","disable_startup","set_service_manual","disable_task","apply_power_plan","empty_recycle","cleaner_delete","terminate_process","launch_game","launch_game_session","restore_change","unknown.command"]{assert!(!read_only_command(command));}for command in ["snapshot","ui_preferences","preview_profile","history"]{assert!(read_only_command(command));}}}
 pub fn run(report:&Path)->Result<(),String>{
  let db=crate::storage::Database::open(Path::new(":memory:"))?;db.log("self_test","In-memory migration; no Windows preferences changed")?;
  let mut monitor=crate::system_info::Monitor::new();let snapshot=monitor.snapshot();

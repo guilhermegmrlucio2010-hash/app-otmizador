@@ -4,7 +4,7 @@
 
 Com Node e as dependências instalados, faça duplo clique em `Abrir-LUCIOZ.cmd` para consultar a interface no navegador. O atalho verifica o servidor antes de abrir `http://127.0.0.1:1420/` e guarda erros em `.local/preview-launch.log`.
 
-A pré-visualização não tem APIs Windows. Para usar inventário e operações, compile/inicie o desktop com `npm run desktop` depois de instalar os pré-requisitos do README. A distribuição nativa ainda não foi validada.
+A pré-visualização não tem APIs Windows. Para usar inventário e operações, compile/inicie o desktop com `npm run desktop` depois de instalar os pré-requisitos do README. Consulte WINDOWS-BUILD.md para descarregar o instalador efetivamente validado.
 
 ## Otimizar com confirmação
 
@@ -45,3 +45,15 @@ Para FPS, importe um CSV PresentMon com `MsBetweenPresents`, `ProcessID` e `Swap
 Restaure alterações recentes primeiro, individualmente, por categoria ou globalmente. Não elimine `lucioz.db` enquanto houver alterações ativas. As ferramentas oficiais de Proteção do Sistema podem ser abertas no Centro de restauro; o Windows pode pedir autorização para essa ferramenta. O LUCIOZ não marca um ponto como criado só por abrir o painel.
 
 Eliminar ficheiros e desinstalar aplicações não são operações reversíveis pelo Centro de restauro. Alterações feitas fora do LUCIOZ também não são registadas automaticamente.
+
+## Fluxos 0.3
+
+Safe/Balanced/Gaming abrem propostas nativas; selecionar um modo não aplica configurações. Reveja cada proposta, deixe opções desnecessárias desmarcadas e confirme. Opções de energia podem aumentar consumo e temperatura; não garantem FPS.
+
+Em Processador, pode selecionar um plano instalado com confirmação e restauro. Em Serviços, reveja o serviço reconhecido, dependências e motivo de elegibilidade. Só confirme não utilização se conhecer a funcionalidade; o helper UAC altera apenas o tipo de arranque permitido. Serviços não elegíveis ficam disponíveis apenas para inspeção.
+
+As tarefas agendadas estão na vista de Serviços. Só tarefas opcionais reconhecidas do próprio utilizador podem ser desativadas; o Centro de restauro guarda o estado original.
+
+No Game Booster, guarde um executável e prepare uma sessão. Safe não altera energia. Balanced/Gaming exigem um plano já instalado. Mantenha o LUCIOZ aberto até terminar. Se fechar, consulte o Centro de restauro; o histórico não prova que o jogo ainda esteja em execução. Um launcher que termine cedo também termina a monitorização.
+
+A análise de ficheiros grandes não elimina ficheiros. A limpeza de temporários e da lixeira é permanente e requer confirmação. Não são incluídos documentos, Downloads ou saves.

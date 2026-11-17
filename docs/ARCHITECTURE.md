@@ -66,3 +66,11 @@ O restauro é por preferência efetiva, não por bytes de registo. O motor não 
 
 Referência: [SystemParametersInfoW — Microsoft](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-systemparametersinfow). O parser de FPS segue a coluna documentada em [PresentMon Capture Application](https://github.com/GameTechDev/PresentMon/blob/main/README-CaptureApplication.md).
 
+
+## Novos módulos 0.3
+
+power_manager utiliza APIs PowrProf para planos instalados e restauro. profile_engine gera propostas Safe/Balanced/Gaming com estados reais. service_changes limita escritas SCM e eleva somente o helper CLI estrito, antes da inicialização Tauri. scheduled_tasks usa COM e comparação da definição. desktop_commands desloca operações para workers e serializa mutações com o mutex de operações.
+
+game_sessions mantém uma única sessão gerida, acompanha o Child e restaura energia no fim. A migração 003 adiciona o diário de sessões; o restauro não depende do processo sobreviver a uma reinicialização. storage_tools implementa lixeira e análise limitada de ficheiros grandes. isolated_tests contém fixtures exclusivamente para runners GitHub Windows descartáveis.
+
+O workflow valida fonte, testes Rust release, instalador, smoke nativo, fixtures, instalação/desinstalação e navegação WebView2 de leitura. Evidência efetiva em WINDOWS-BUILD.md.

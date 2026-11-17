@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
   pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
 jobs:
   validate:
     runs-on: windows-latest
@@ -35,8 +38,6 @@ jobs:
         run: node scripts/smoke-native.mjs src-tauri/target/release/lucioz-optimizer.exe isolated-fixtures.json --isolated-fixture-test
       - name: Disposable installation and uninstall test
         run: powershell.exe -NoProfile -File scripts/test-installation.ps1
-      - name: Install free native UI test driver
-        run: cargo install tauri-driver --locked
       - name: Set up matching signed Edge WebDriver
         run: powershell.exe -NoProfile -File scripts/setup-webdriver.ps1
       - name: Read-only WebView2 user-flow tests
@@ -69,4 +70,5 @@ jobs:
           path: |
             .local/native-ui.png
             .local/webdriver.log
+            .local/native-driver.log
           if-no-files-found: ignore

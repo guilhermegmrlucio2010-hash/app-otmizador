@@ -31,7 +31,7 @@ Os estilos e ícones são locais. Não é usado CDN nem conteúdo remoto no WebV
 - `scripts/games.ps1`: manifestos locais Steam e Epic; não lê credenciais.
 - `service_manager`: consulta nativa SCM com `windows-service` e enumeração de dependentes Win32.
 - `process_manager`: terminação limitada a nomes reconhecidos, validação de início/PID, sem elevação.
-- `optimization_engine`: allowlist fechada de três preferências SPI; adaptador real e adaptador de testes.
+- `optimization_engine`: allowlist fechada de seis preferências SPI; adaptador real e adaptador de testes.
 - `disk_cleaner`: análise sem recursão, exclusão de reparse points, verificação de idade/identidade, abertura exclusiva e eliminação pelo handle.
 - `network_monitor`: validação `Ipv4Addr`, ICMP através de `System.Net.NetworkInformation.Ping`, sem strings de comandos recebidas da interface.
 - `game_manager`: validação de executáveis .exe absolutos, regulares, fora do diretório Windows.
@@ -74,3 +74,7 @@ power_manager utiliza APIs PowrProf para planos instalados e restauro. profile_e
 game_sessions mantém uma única sessão gerida, acompanha o Child e restaura energia no fim. A migração 003 adiciona o diário de sessões; o restauro não depende do processo sobreviver a uma reinicialização. storage_tools implementa lixeira e análise limitada de ficheiros grandes. isolated_tests contém fixtures exclusivamente para runners GitHub Windows descartáveis.
 
 O workflow valida fonte, testes Rust release, instalador, smoke nativo, fixtures, instalação/desinstalação e navegação WebView2 de leitura. Evidência efetiva em WINDOWS-BUILD.md.
+
+## Fluxos 0.4
+
+As preferências SPI são inventariadas por opção, com erros independentes. O filtro nativo do ensaio de leitura recusa mutações antes do handler de comandos e verifica o diário. Helpers de energia e serviços têm rotas CLI estritas anteriores à inicialização Tauri; não elevam a interface ou o jogo. A contabilidade de limpeza tem um contrato tipado que distingue ausência verificada e espaço livre do volume. Consultar AUDIT-0.4.md para a matriz de testes e as exclusões.

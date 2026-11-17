@@ -1,4 +1,4 @@
-﻿# LUCIOZ OPTIMIZER
+# LUCIOZ OPTIMIZER
 
 Aplicação desktop gratuita para Windows 11 x64, em PT-PT. Tauri 2, Rust, React, TypeScript, Vite, Tailwind, Radix, Lucide, Recharts e SQLite. Implementação original, sem subscrições. A equivalência completa com o Hone ainda não foi atingida.
 
@@ -13,7 +13,7 @@ Abrir-LUCIOZ.cmd e http://127.0.0.1:1420 abrem somente o preview do navegador, s
 ## Funcionalidades
 
 - Dashboard com CPU, RAM, discos, processos e tráfego agregado reais; GPU NVIDIA opcional com fornecedor instalado e assinado. Dados indisponíveis são identificados.
-- Catálogo: 108 entradas, das quais 105 inspeções/propriedades e três alterações visuais via API. Não são 108 otimizações.
+- Catálogo com inspeções/propriedades, seis preferências visuais via API e exclusões explícitas. As entradas de inventário não são otimizações.
 - Otimizar PC: análise, propostas Safe/Balanced/Gaming, seleção, confirmação, original persistido, aplicação e verificação. Alterações de energia opcionais e inicialmente desmarcadas.
 - Planos de energia instalados, alteração e restauro com deteção de conflitos.
 - Serviços SCM: dependências, triggers e revisão conservadora. Escrita limitada a serviços opcionais reconhecidos, parados, automáticos, sem triggers ou dependentes. Apenas transição para Manual, sem parar ou desativar serviços. Confirmação de não utilização e UAC por operação.
@@ -48,7 +48,7 @@ cargo test --manifest-path src-tauri/Cargo.toml --release --features tauri/custo
 npm run installer
 ```
 
-Saída 0.3: src-tauri/target/release/bundle/nsis/LUCIOZ OPTIMIZER_0.3.0_x64-setup.exe. Executável: src-tauri/target/release/lucioz-optimizer.exe. Consulte o registo de compilação antes de assumir que o instalador está disponível localmente.
+Saída 0.4: src-tauri/target/release/bundle/nsis/LUCIOZ OPTIMIZER_0.4.0_x64-setup.exe. Executável: src-tauri/target/release/lucioz-optimizer.exe. Consulte o registo de compilação antes de assumir que o instalador está disponível localmente.
 
 Os testes de alteração SCM/Task Scheduler e instalação executam exclusivamente num runner descartável GitHub Actions. Não os execute no Windows pessoal. Testes locais de desenvolvimento não alteram configurações Windows.
 
@@ -59,3 +59,5 @@ Não desativa Defender, Firewall, UAC, Windows Update, drivers ou serviços crí
 A base lucioz.db fica no diretório de dados local Tauri, identificador pt.lucioz.optimizer. Preserve-a e os backups até restaurar as alterações. Faça cópias com a aplicação fechada. Restaure do mais recente para o mais antigo. Eliminações, desinstalações e alterações feitas nas Definições externas não têm rollback. Pontos de restauro não são criados automaticamente.
 
 [Estado e limitações](docs/STATUS.md) · [Arquitetura](docs/ARCHITECTURE.md) · [Utilização](docs/USAGE.md) · [Segurança](docs/SECURITY.md) · [Referência e plano](docs/REFERENCE-AND-PLAN.md)
+
+[Ações e evidência 0.4](docs/AUDIT-0.4.md): implementação, testes por opção e limites. A correspondência com as 38 opções das capturas aguarda os nomes/capturas, que não foram recebidos.

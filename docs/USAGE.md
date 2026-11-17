@@ -57,3 +57,13 @@ As tarefas agendadas estão na vista de Serviços. Só tarefas opcionais reconhe
 No Game Booster, guarde um executável e prepare uma sessão. Safe não altera energia. Balanced/Gaming exigem um plano já instalado. Mantenha o LUCIOZ aberto até terminar. Se fechar, consulte o Centro de restauro; o histórico não prova que o jogo ainda esteja em execução. Um launcher que termine cedo também termina a monitorização.
 
 A análise de ficheiros grandes não elimina ficheiros. A limpeza de temporários e da lixeira é permanente e requer confirmação. Não são incluídos documentos, Downloads ou saves.
+
+## Fluxos 0.4
+
+As seis preferências visuais são propostas reais: área de cliente, menus, sugestões, caixas de seleção, deslocamento de listas e desvanecimento de seleção. Não são apresentadas como ganho de FPS. Abra Otimizações, aguarde a leitura dos estados, selecione propostas e reveja a confirmação. Após aplicar/restaurar, os estados são relidos.
+
+Se o Windows recusar uma mudança de energia sem administrador, o LUCIOZ pede UAC apenas para a operação. A interface e os jogos mantêm privilégios normais. Cancelar/recusar ou uma política que impeça a mudança produz erro, não sucesso; o original permanece registado. Um restauro de energia também pode precisar de UAC.
+
+O relatório Cleaner distingue bytes lógicos de ficheiros cuja ausência foi verificada e a variação observada do espaço livre do volume. Outras aplicações, compressão e hard links podem afetar a diferença; não se atribui automaticamente toda a variação à limpeza. Ficheiros bloqueados, alterados, recentes ou fora da raiz permitida não são contabilizados como eliminados.
+
+Em Game Booster, o painel de estado lê preferências Game Mode/captura e processos. Uma preferência registada não prova que o modo/captura esteja ativo. A presença de Discord, OBS ou outro processo também não prova que um overlay esteja ativo. Use os botões para rever nas Definições oficiais e leia novamente; o LUCIOZ não finge ter alterado essas opções.

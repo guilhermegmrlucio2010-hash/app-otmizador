@@ -1,61 +1,50 @@
-﻿# Compilação Windows — LUCIOZ OPTIMIZER 0.3.0
+﻿# Compilação Windows — LUCIOZ OPTIMIZER 0.4.0
 
 Instalador gerado e validação concluída em 17/11/2026.
 
-- Código compilado: 153c269a2067ff0521e3f41aae55121a72c245bb.
+- Commit testado: 88e18bd006fd0c259c41d86732b73e6f09baeb8f.
 - Branch: codex/windows-installer.
-- Execução aprovada: https://github.com/guilhermegmrlucio2010-hash/app-otmizador/actions/runs/44152570438
-- Download do ZIP: https://github.com/guilhermegmrlucio2010-hash/app-otmizador/actions/runs/44152570438/artifacts/14360266539
-- É necessário iniciar sessão no GitHub. Artefacto disponível até 01/12/2026, 18:58 UTC.
-- ZIP: 7552718 bytes.
-- SHA256 do ZIP: 68de9fb3ff8d8de7ab967b20079ea9b42605ea807864177b48ea6f100f0d2739.
-- Captura da interface: artefacto lucioz-ui-diagnostics na mesma execução.
+- Execução aprovada: https://github.com/guilhermegmrlucio2010-hash/app-otmizador/actions/runs/44165559878
+- Download: https://github.com/guilhermegmrlucio2010-hash/app-otmizador/actions/runs/44165559878/artifacts/14365108357
+- Requer sessão GitHub. Artefacto disponível até 01/12/2026, 20:11 UTC.
+- ZIP: 7584893 bytes.
+- SHA256 do ZIP: 832db7c695d43ad4baa0727d785f0660f21afc2868ebc17f3f0a7edcd38a59dd.
 
-## Onde está o EXE
+## Instalar
 
-Dentro do ZIP descarregado:
-
-```
-src-tauri/target/release/bundle/nsis/LUCIOZ OPTIMIZER_0.3.0_x64-setup.exe
-```
-
-Executável sem instalação:
+Descarregue e extraia o ZIP. Execute:
 
 ```
-src-tauri/target/release/lucioz-optimizer.exe
+src-tauri/target/release/bundle/nsis/LUCIOZ OPTIMIZER_0.4.0_x64-setup.exe
 ```
 
-SHA256SUMS.txt contém o hash individual do instalador. O artefacto inclui relatórios nativos, fixtures, instalação e UI. O instalador foi produzido no runner GitHub; não é afirmado que exista um EXE compilado nesta pasta local sem descarregar o ZIP.
+Abra LUCIOZ OPTIMIZER pelo menu Iniciar, como utilizador normal. Requer Windows x64 e WebView2 Runtime. Não precisa de Node, Rust, Vite ou localhost:1420 para usar o instalador. A instalação é por utilizador e o EXE não tem assinatura comercial.
 
-## Instalação
+O binário foi gerado no GitHub, não compilado nesta pasta local. O portátil está em src-tauri/target/release/lucioz-optimizer.exe dentro do ZIP. SHA256SUMS.txt contém o hash individual do instalador.
 
-1. Abra o link de download, inicie sessão no GitHub e guarde o ZIP.
-2. Extraia todos os ficheiros.
-3. Execute o ficheiro x64-setup.exe indicado acima. Instala por utilizador.
-4. Abra LUCIOZ OPTIMIZER no menu Iniciar, como utilizador normal.
-5. Consulte o Dashboard e analise antes de autorizar alterações. O Centro de restauro conserva os originais das operações reversíveis.
-
-Não precisa de abrir localhost:1420, instalar Node/Rust ou executar o servidor Vite. Requer Windows x64 e WebView2 Runtime. O instalador não tem assinatura comercial.
-
-## Resultados aprovados
+## Resultados
 
 | Verificação | Resultado |
 |---|---|
-| TypeScript / ESLint | Passou |
-| Frontend | 25 testes passaram |
+| TypeScript / ESLint / build frontend | Passou |
+| Frontend | 27 testes passaram |
 | SQLite | Migrações v1/v2/v3 e integridade passaram |
 | PowerShell | Sintaxe passou |
-| Frontend produção | Passou |
-| Rust release | 24 testes passaram |
+| Rust release | 31 testes passaram |
 | Tauri / NSIS | Compilação e instalador passaram |
-| Binário nativo | SQLite em memória, métricas reais e inventário CIM passaram |
-| Fixtures de serviços | SCM Auto → Manual → Auto passou; fixture eliminada; nenhum serviço existente alterado |
-| Fixtures de tarefas | COM Enabled → Disabled → Enabled passou; tarefa nunca executada e removida |
-| Instalação | Instalação por utilizador, self-test do EXE instalado e desinstalação passaram |
-| WebView2 | 21 verificações passaram: IPC/métricas, 19 abas adicionais e preview de Otimizar PC; zero comandos de escrita Windows |
+| Binário nativo / instalado | Métricas reais, SQLite em memória e inventário CIM passaram |
+| Serviços / tarefas | Fixtures SCM Auto/Manual/Auto e COM Enabled/Disabled/Enabled passaram, sem alterar serviços/tarefas existentes |
+| Energia com permissão | Dois planos instalados alterados e restaurados; helper estrito verificado |
+| Energia sem administrador | Acesso negado (código 5) e plano intacto verificados; sem tentar abrir UAC no teste |
+| Seis preferências SPI sem administrador | Cada opção foi ativada para o teste, aplicada/desativada, relida, restaurada pelo diário e reposta no estado inicial do runner |
+| Arranque sem administrador | Valor descartável HKCU Run removido/restaurado com bytes/tipo exatos e eliminado; comando nunca executado |
+| Processo sem administrador | Filho próprio descartável, identidade obsoleta recusada e terminação/saída confirmadas |
+| Cleaner | Ficheiros temporários próprios: proteção de recentes/pessoais, bloqueios, metadados alterados, caminhos externos e ausência verificada |
+| Instalação | Instalação por utilizador, self-test e desinstalação passaram |
+| WebView2 | 28 verificações passaram; barreira Rust recusou uma escrita; diário de alterações permaneceu igual |
 
-Os testes correram em Windows Server 2025 Datacenter no GitHub, incluindo UI com privilégios normais. Não correram no PC do utilizador e não modificaram o seu Windows. Os ensaios de preferências/arranque usam adaptadores e os de ficheiros usam fixtures temporárias; nem todas as combinações de hardware, jogos, permissões e interrupções foram exercitadas.
+O ZIP inclui native-smoke.json, isolated-fixtures.json, installed-smoke.json, ui-native-report.json e preferences-smoke.json. A captura da interface está no artefacto lucioz-ui-diagnostics da mesma execução.
 
-As primeiras tentativas de UI ficaram bloqueadas porque o runner elevado não permitia os argumentos de depuração WebView2. A execução final reduz privilégios apenas para os testes UI, seguindo a abordagem pública do Tauri. A aplicação distribuída não inclui gsudo nem drivers de automação.
+Os testes correram no Windows Server 2025 do GitHub. Não alteraram configurações do Windows pessoal do utilizador. Isto não demonstra compatibilidade com todas as configurações Windows 11. A interação com a caixa UAC real não foi automatizada; foram verificados os métodos estritos do helper e o comportamento com/sem permissão.
 
-Consulte STATUS.md para funcionalidades ainda não suportadas. Build aprovada não significa equivalência completa com o Hone ou garantia de ganhos de FPS.
+Não é declarada equivalência completa com o Hone. A lista/capturas das 38 opções não foi recebida. Consulte AUDIT-0.4.md para a matriz individual e STATUS.md para limites funcionais.

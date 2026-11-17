@@ -41,7 +41,7 @@ jobs:
       - name: Set up matching signed Edge WebDriver
         run: powershell.exe -NoProfile -File scripts/setup-webdriver.ps1
       - name: Read-only WebView2 user-flow tests
-        run: node scripts/test-ui-native.mjs
+        run: powershell.exe -NoProfile -File scripts/test-ui-medium.ps1
       - name: Installer checksum
         shell: pwsh
         run: |

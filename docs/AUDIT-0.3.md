@@ -26,3 +26,9 @@ O código da versão 0.2 foi revisto por domínio: frontend, comandos Tauri, for
 6. Testes locais não alteram configurações do computador do utilizador. Os testes de escrita usam adaptadores ou fixtures do projeto e os ensaios administrativos decorrem apenas em runner isolado.
 7. Lint, TypeScript, testes frontend, migrações, Rust release, build, teste de leitura do binário e empacotamento devem passar.
 8. O instalador deve ser disponibilizado com checksum e limitações reais. Uma build bem-sucedida não equivale a todas as funções testadas em todos os PCs Windows 11.
+
+## Resultado da auditoria
+
+Critérios de compilação, testes e empacotamento aprovados no run 44152570438. As falhas de UI intermédias foram investigadas e resolvidas reduzindo os privilégios do processo de teste. One-click, perfis, serviços/tarefas restritos, energia temporária, lixeira, ficheiros grandes, atualização de processos e rótulos/links foram implementados ou corrigidos. Debloater integrado, captura FPS ao vivo e restantes limitações do STATUS.md permanecem explicitamente não suportados.
+
+Foram acrescentados testes reais de substituição atómica/ficheiro bloqueado e proteção da ordem de restauro por alvo, além de fixtures SCM/COM e navegação no WebView2. Nenhuma configuração Windows do utilizador foi alterada durante estes testes.

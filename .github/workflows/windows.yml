@@ -7,7 +7,7 @@ on:
 jobs:
   validate:
     runs-on: windows-latest
-    timeout-minutes: 40
+    timeout-minutes: 50
     permissions:
       contents: read
     steps:
@@ -31,6 +31,16 @@ jobs:
       - run: npm run installer
       - name: Native read-only smoke test
         run: node scripts/smoke-native.mjs src-tauri/target/release/lucioz-optimizer.exe native-smoke.json
+      - name: Disposable Windows service and task fixture tests
+        run: node scripts/smoke-native.mjs src-tauri/target/release/lucioz-optimizer.exe isolated-fixtures.json --isolated-fixture-test
+      - name: Disposable installation and uninstall test
+        run: powershell.exe -NoProfile -File scripts/test-installation.ps1
+      - name: Install free native UI test driver
+        run: cargo install tauri-driver --locked
+      - name: Set up matching signed Edge WebDriver
+        run: powershell.exe -NoProfile -File scripts/setup-webdriver.ps1
+      - name: Read-only WebView2 user-flow tests
+        run: node scripts/test-ui-native.mjs
       - name: Installer checksum
         shell: pwsh
         run: |
@@ -45,6 +55,18 @@ jobs:
             src-tauri/target/release/bundle/nsis/*-setup.exe
             src-tauri/target/release/lucioz-optimizer.exe
             native-smoke.json
+            isolated-fixtures.json
+            installed-smoke.json
+            ui-native-report.json
             SHA256SUMS.txt
           if-no-files-found: error
           retention-days: 14
+      - name: UI diagnostic logs and screenshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lucioz-ui-diagnostics
+          path: |
+            .local/native-ui.png
+            .local/webdriver.log
+          if-no-files-found: ignore

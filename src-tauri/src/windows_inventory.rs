@@ -1,11 +1,12 @@
 use serde_json::Value;
 use std::os::windows::process::CommandExt;
+pub fn run_request(script:&str,request:&Value)->Result<Value,String>{let json=serde_json::to_string(request).map_err(|e|e.to_string())?;if json.len()>128_000{return Err("Pedido demasiado grande".into())}let literal=json.replace('\'',"''");run_fixed(&format!("$Request=ConvertFrom-Json '{}';\n{}",literal,script))}
 pub fn query(kind:&str)->Result<Value,String>{let script=match kind {
 "gpu"=>include_str!("../scripts/gpu.ps1"),
 "hardware"=>include_str!("../scripts/hardware.ps1"),
 "services"=>"Get-CimInstance Win32_Service | Select-Object Name,DisplayName,Description,State,StartMode,PathName,ProcessId,StartName",
 "startup"=>"Get-CimInstance Win32_StartupCommand | Select-Object Name,Command,Location,User",
-"tasks"=>include_str!("../scripts/tasks.ps1"),
+"tasks"=>return run_fixed(&format!("{}\n{}",include_str!("../scripts/task-common.ps1"),include_str!("../scripts/tasks.ps1"))),
 "applications"=>"Get-ItemProperty HKLM:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*,HKLM:\\Software\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*,HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\* -ErrorAction SilentlyContinue | Where-Object DisplayName | Select-Object DisplayName,Publisher,DisplayVersion,EstimatedSize,InstallLocation,SystemComponent; Get-AppxPackage | Select-Object @{n='DisplayName';e={$_.Name}},Publisher,Version,InstallLocation,IsFramework,NonRemovable,PackageFullName",
 "network"=>"Get-CimInstance Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=True' | Select-Object Description,IPAddress,DefaultIPGateway,DNSServerSearchOrder,DHCPEnabled; Get-NetAdapter | Select-Object Name,InterfaceDescription,Status,LinkSpeed",
 "health"=>"Get-WinEvent -FilterHashtable @{LogName='Application';Level=2;StartTime=(Get-Date).AddDays(-7)} -MaxEvents 50 -ErrorAction SilentlyContinue | Select-Object TimeCreated,Id,ProviderName,Message",

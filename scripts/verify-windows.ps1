@@ -2,7 +2,7 @@ param([switch]$SyntaxOnly)
 $ErrorActionPreference='Stop'
 $root=Split-Path -Parent $PSScriptRoot
 $scripts=Join-Path $root 'src-tauri\scripts'
-foreach($name in @('hardware','tasks','games','gpu')){
+foreach($name in @('hardware','tasks','task-common','task-operation','games','gpu')){
  $path=Join-Path $scripts ($name+'.ps1')
  $errors=$null
  $tokens=$null

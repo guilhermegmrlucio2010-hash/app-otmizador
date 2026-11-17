@@ -30,17 +30,19 @@ export function PerformanceChart({ data, field = 'cpu', color = '#4285ff', unit 
     height?: number;
 }) { if (data.length < 2)
     return <Empty title="A aguardar amostras">O gráfico aparece após duas leituras reais do sistema.</Empty>; return <div style={{ width: '100%', height }}><ResponsiveContainer><AreaChart data={data}><defs><linearGradient id={`fill-${field}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={color} stopOpacity={.3}/><stop offset="100%" stopColor={color} stopOpacity={0}/></linearGradient></defs><CartesianGrid stroke="#202937" vertical={false}/><XAxis dataKey="time" tick={{ fill: '#788799', fontSize: 10 }} axisLine={false} tickLine={false} minTickGap={40}/><YAxis tick={{ fill: '#788799', fontSize: 10 }} axisLine={false} tickLine={false} width={35} unit={unit}/><Tooltip contentStyle={{ background: '#121a27', border: '1px solid #2c3b50', borderRadius: 8 }}/><Area type="monotone" dataKey={field} stroke={color} fill={`url(#fill-${field})`} strokeWidth={2} isAnimationActive={false}/></AreaChart></ResponsiveContainer></div>; }
-export function ConfirmationDialog({ open, title, children, onCancel, onConfirm, busy = false }: {
+export function ConfirmationDialog({ open, title, children, onCancel, onConfirm, busy = false, confirmLabel='Confirmar e executar', description='Leia as consequências antes de confirmar a operação.' }: {
     open: boolean;
     title: string;
     children: ReactNode;
     onCancel: () => void;
     onConfirm: () => void;
     busy?: boolean;
+    confirmLabel?: string;
+    description?: string;
 }) { return <Dialog.Root open={open} onOpenChange={v => { if (!v && !busy)
     onCancel(); }}><Dialog.Portal><Dialog.Overlay className="dialog-overlay"/><Dialog.Content className="dialog-content" onEscapeKeyDown={e => { if (busy)
     e.preventDefault(); }} onInteractOutside={e => { if (busy)
-    e.preventDefault(); }}><Dialog.Title>{title}</Dialog.Title><Dialog.Description>Leia as consequências antes de confirmar a operação.</Dialog.Description><div className="dialog-body">{children}</div><div className="actions"><Button variant="secondary" disabled={busy} onClick={onCancel}>Cancelar</Button><Button disabled={busy} onClick={onConfirm}>{busy ? 'A executar…' : 'Confirmar e executar'}</Button></div></Dialog.Content></Dialog.Portal></Dialog.Root>; }
+    e.preventDefault(); }}><Dialog.Title>{title}</Dialog.Title><Dialog.Description>{description}</Dialog.Description><div className="dialog-body">{children}</div><div className="actions"><Button variant="secondary" disabled={busy} onClick={onCancel}>Cancelar</Button><Button disabled={busy} onClick={onConfirm}>{busy ? 'A executar…' : confirmLabel}</Button></div></Dialog.Content></Dialog.Portal></Dialog.Root>; }
 function cell(value: unknown) { return value === undefined || value === null ? 'Não disponível' : typeof value === 'object' ? JSON.stringify(value) : String(value); }
 export function DataTable({ rows, columns, onRow, action, filter = '' }: {
     rows: Row[];

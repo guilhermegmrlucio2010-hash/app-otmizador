@@ -26,7 +26,8 @@ jobs:
       - run: npm test
       - run: npm run test:db
       - run: npm run test:windows-syntax
-      - run: cargo test --manifest-path src-tauri/Cargo.toml
+      - run: npm run build
+      - run: cargo test --manifest-path src-tauri/Cargo.toml --release --features tauri/custom-protocol
       - run: npm run installer
       - name: Native read-only smoke test
         run: node scripts/smoke-native.mjs src-tauri/target/release/lucioz-optimizer.exe native-smoke.json

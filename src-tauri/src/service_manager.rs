@@ -1,11 +1,11 @@
 ﻿use serde_json::{json,Value};
 use windows_service::{service::ServiceAccess,service_manager::{ServiceManager,ServiceManagerAccess}};
-use windows_sys::Win32::System::Services::{EnumDependentServicesW,ENUM_SERVICE_STATUSW,SERVICE_STATE_ALL,QueryServiceConfig2W,SERVICE_CONFIG_TRIGGER_INFO,SERVICE_TRIGGER_INFO};
+use windows_sys::Win32::System::Services::{EnumDependentServicesW,ENUM_SERVICE_STATUSW,SERVICE_STATE_ALL,QueryServiceConfig2W,SERVICE_CONFIG_TRIGGER_INFO,SERVICE_TRIGGER_INFO,SERVICE_ENUMERATE_DEPENDENTS};
 unsafe fn wide_string(p:*const u16)->String {if p.is_null(){return String::new()}let mut length=0;while length<1024&&unsafe{*p.add(length)}!=0{length+=1;}String::from_utf16_lossy(unsafe{std::slice::from_raw_parts(p,length)})}
 pub fn inspect(name:&str)->Result<Value,String>{
  if name.is_empty()||name.len()>256||name.contains('\0'){return Err("Nome de serviço inválido".into())}
  let manager=ServiceManager::local_computer(None::<&str>,ServiceManagerAccess::CONNECT).map_err(|e|e.to_string())?;
- let service=manager.open_service(name,ServiceAccess::QUERY_CONFIG|ServiceAccess::QUERY_STATUS|ServiceAccess::ENUMERATE_DEPENDENTS).map_err(|e|e.to_string())?;
+ let service=manager.open_service(name,ServiceAccess::QUERY_CONFIG|ServiceAccess::QUERY_STATUS|ServiceAccess::from_bits_retain(SERVICE_ENUMERATE_DEPENDENTS)).map_err(|e|e.to_string())?;
  let config=service.query_config().map_err(|e|e.to_string())?;let status=service.query_status().map_err(|e|e.to_string())?;
  let mut trigger_size=0u32;let mut trigger_count:Option<u32>=None;
  unsafe{QueryServiceConfig2W(service.raw_handle() as _,SERVICE_CONFIG_TRIGGER_INFO,std::ptr::null_mut(),0,&mut trigger_size);}

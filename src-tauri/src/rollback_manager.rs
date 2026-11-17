@@ -1,0 +1,3 @@
+use crate::storage::Database;
+use serde_json::Value;
+pub fn restore(db:&Database,id:i64)->Result<Value,String>{let kind:String=db.0.lock().map_err(|e|e.to_string())?.query_row("SELECT optimization_id FROM changes WHERE id=?1",[id],|r|r.get(0)).map_err(|e|e.to_string())?;match kind.as_str(){"game.fortnite.scalability"=>crate::game_optimizer::restore(db,id),"startup.user_run"=>crate::startup_manager::restore(db,id),_=>crate::optimization_engine::restore(db,id)}}

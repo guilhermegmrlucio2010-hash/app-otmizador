@@ -1,0 +1,49 @@
+{
+  "name": "lucioz-pc-optimizer-pro",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "preview": "vite preview --host 127.0.0.1 --port 1420 --configLoader native",
+    "dev": "vite --host 127.0.0.1 --configLoader native",
+    "build": "tsc -b && vite build --configLoader native",
+    "typecheck": "tsc -b",
+    "lint": "eslint .",
+    "test": "node scripts/test.mjs",
+    "tauri": "tauri",
+    "desktop": "tauri dev",
+    "installer": "tauri build",
+    "test:db": "node scripts/check-db.mjs",
+    "test:windows": "powershell.exe -NoProfile -File scripts/verify-windows.ps1",
+    "check:prerequisites": "powershell.exe -NoProfile -File scripts/check-prerequisites.ps1",
+    "open": "node scripts/open-preview.mjs",
+    "test:windows-syntax": "powershell.exe -NoProfile -File scripts/verify-windows.ps1 -SyntaxOnly"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.0.0",
+    "@radix-ui/react-dialog": "^1.1.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.468.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "recharts": "^3.0.0",
+    "tailwind-merge": "^3.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "@tailwindcss/vite": "^4.0.0",
+    "@tauri-apps/cli": "^2.0.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "eslint": "^9.0.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^16.0.0",
+    "tailwindcss": "^4.0.0",
+    "typescript": "~5.7.2",
+    "typescript-eslint": "^8.0.0",
+    "vite": "^6.0.0",
+    "vitest": "^2.1.9"
+  }
+}

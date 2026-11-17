@@ -1,0 +1,1 @@
+{"identifier":"default","description":"Janela local; sem shell, sistema de ficheiros ou rede expostos ao frontend","windows":["main"],"permissions":["core:default"]}
